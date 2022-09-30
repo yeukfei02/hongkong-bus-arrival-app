@@ -147,7 +147,7 @@ function Routes() {
           <List.Item
             key={i}
             title={item.route}
-            onPress={() => handleListItemClick("kmb", item.route)}
+            onPress={() => handleListItemClick("KMB", item.route)}
             left={(props) => <List.Icon {...props} icon="bus" />}
           />
         );
