@@ -5,6 +5,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+import _ from "lodash";
 import { getRootUrl } from "../../helper/helper";
 
 const rootUrl = getRootUrl();
@@ -106,10 +107,10 @@ function BusRouteStop() {
   };
 
   const renderBusRouteStop = () => {
-    let routeStopView = null;
+    let busRouteStopView = null;
 
-    if (busRouteStop) {
-      routeStopView = busRouteStop.map((item, i) => {
+    if (!_.isEmpty(busRouteStop)) {
+      busRouteStopView = busRouteStop.map((item, i) => {
         return (
           <View key={i}>
             <Card style={styles.cardContainer}>
@@ -138,13 +139,23 @@ function BusRouteStop() {
           </View>
         );
       });
+    } else {
+      busRouteStopView = (
+        <View>
+          <Card style={styles.cardContainer}>
+            <Card.Content style={{ alignSelf: "center" }}>
+              <Title>{t("pleaseWait")}</Title>
+            </Card.Content>
+          </Card>
+        </View>
+      );
     }
 
-    return routeStopView;
+    return busRouteStopView;
   };
 
   const handleEnterButtonClick = (busStopId) => {
-    navigation.navigate(t("routeStopArrival"), {
+    navigation.navigate(t("busArrivalTime"), {
       companyId: route.params.companyId,
       routeStr: route.params.routeStr,
       busStopId: busStopId,

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
-import { Button, Card, Paragraph } from "react-native-paper";
+import { Button, Card, Paragraph, Title } from "react-native-paper";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+import _ from "lodash";
 import { getRootUrl } from "../../helper/helper";
 
 const rootUrl = getRootUrl();
@@ -114,7 +115,7 @@ function BusRoute() {
   const renderBusRouteView = () => {
     let busRouteView = null;
 
-    if (busRoute) {
+    if (!_.isEmpty(busRoute)) {
       busRouteView = (
         <Card style={styles.cardContainer}>
           <Card.Title
@@ -140,6 +141,14 @@ function BusRoute() {
               Enter
             </Button>
           </Card.Actions>
+        </Card>
+      );
+    } else {
+      busRouteView = (
+        <Card style={styles.cardContainer}>
+          <Card.Content style={{ alignSelf: "center" }}>
+            <Title>{t("pleaseWait")}</Title>
+          </Card.Content>
         </Card>
       );
     }
