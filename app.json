@@ -26,6 +26,11 @@
     },
     "description": "Hong Kong Bus Arrival App",
     "privacy": "public",
-    "githubUrl": "https://github.com/yeukfei02/hongkong-bus-arrival-app"
+    "githubUrl": "https://github.com/yeukfei02/hongkong-bus-arrival-app",
+    "extra": {
+      "eas": {
+        "projectId": "3d633502-0f3f-4b02-b8aa-af40f6c911d0"
+      }
+    }
   }
 }
