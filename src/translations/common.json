@@ -1,0 +1,83 @@
+{
+  "eng": {
+    "translation": {
+      "routes": "Routes",
+      "settings": "Settings",
+      "busRoute": "BusRoute",
+      "routeStop": "RouteStop",
+      "routeStopArrival": "RouteStopArrival",
+
+      "nwfbAndCtb": "New World First Bus/Citybus",
+      "kmb": "KMB",
+      "searchRoutes": "Search Routes",
+      "hongkongIsland": "Hong Kong Island",
+      "kowloon": "Kowloon",
+      "newTerritories": "New Territories",
+
+      "next": "Next",
+      "bus": "Bus",
+      "remainingTime": "Remaining Time:",
+
+      "contactUsTitle": "Contact Us",
+      "changeLanguage": "Change Language",
+      "selectLanguage": "Select language",
+      "english": "English",
+      "traditionalChinese": "Traditional Chinese",
+      "simplifiedChinese": "Simplified Chinese"
+    }
+  },
+  "zh_hk": {
+    "translation": {
+      "routes": "路線",
+      "settings": "設定",
+      "busRoute": "巴士路線",
+      "routeStop": "巴士路線站",
+      "routeStopArrival": "巴士到達時間",
+
+      "nwfbAndCtb": "新巴/城巴",
+      "kmb": "九巴",
+      "searchRoutes": "搜索路線",
+      "hongkongIsland": "香港島",
+      "kowloon": "九龍",
+      "newTerritories": "新界",
+
+      "next": "下",
+      "bus": "車",
+      "remainingTime": "剩餘時間:",
+
+      "contactUsTitle": "聯繫我們",
+      "changeLanguage": "變更語言",
+      "selectLanguage": "選擇語言",
+      "english": "英文",
+      "traditionalChinese": "繁體中文",
+      "simplifiedChinese": "簡體中文"
+    }
+  },
+  "zh_cn": {
+    "translation": {
+      "routes": "路线",
+      "settings": "設定",
+      "busRoute": "巴士路线",
+      "routeStop": "巴士路线站",
+      "routeStopArrival": "巴士到达时间",
+
+      "nwfbAndCtb": "新巴/城巴",
+      "kmb": "九巴",
+      "searchRoutes": "搜索路线",
+      "hongkongIsland": "香港岛",
+      "kowloon": "九龙",
+      "newTerritories": "新界",
+
+      "next": "下",
+      "bus": "车",
+      "remainingTime": "剩余时间:",
+
+      "contactUsTitle": "联系我们",
+      "changeLanguage": "变更语言",
+      "selectLanguage": "选择语言",
+      "english": "英语",
+      "traditionalChinese": "繁体中文",
+      "simplifiedChinese": "简体中文"
+    }
+  }
+}

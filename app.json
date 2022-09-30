@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Hong Kong Bus Arrival App",
+    "slug": "hongkong-bus-arrival-app",
+    "platforms": ["ios", "android"],
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/appstore-icon.png",
+    "splash": {
+      "image": "./assets/appstore-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "userInterfaceStyle": "light",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "bundleIdentifier": "com.donaldwu.hongkongbusarrivalapp",
+      "buildNumber": "0.1.0"
+    },
+    "android": {
+      "package": "com.donaldwu.hongkongbusarrivalapp",
+      "versionCode": 1
+    },
+    "description": "Hong Kong Bus Arrival App",
+    "privacy": "public",
+    "githubUrl": "https://github.com/yeukfei02/hongkong-bus-arrival-app"
+  }
+}
