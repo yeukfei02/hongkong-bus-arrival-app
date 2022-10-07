@@ -11,6 +11,8 @@
       "nwfb": "New World First Bus",
       "ctb": "Citybus",
       "kmb": "KMB",
+      "outbound": "Outbound",
+      "inbound": "Inbound",
       "searchRoutes": "Search Routes",
 
       "next": "Next",
@@ -38,6 +40,8 @@
       "nwfb": "新巴",
       "ctb": "城巴",
       "kmb": "九巴",
+      "outbound": "往外開",
+      "inbound": "往內開",
       "searchRoutes": "搜索路線",
 
       "next": "下",
@@ -65,6 +69,8 @@
       "nwfb": "新巴",
       "ctb": "城巴",
       "kmb": "九巴",
+      "outbound": "往外开",
+      "inbound": "往内开",
       "searchRoutes": "搜索路线",
 
       "next": "下",

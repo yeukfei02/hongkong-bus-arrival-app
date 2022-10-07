@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { getRootUrl } from "../../helper/helper";
 import CustomRadioButton from "../customRadioButton/CustomRadioButton";
+import _ from "lodash";
 
 const rootUrl = getRootUrl();
 
@@ -37,6 +38,9 @@ function Routes() {
   const [nwfbOrCtbChecked, setNwfbOrCtbChecked] = useState(true);
   const [kmbChecked, setKmbChecked] = useState(false);
 
+  const [outboundChecked, setOutboundChecked] = useState(true);
+  const [inboundChecked, setInboundChecked] = useState(false);
+
   const [nwfbAndCtbRoutes, setNwfbAndCtbRoutes] = useState([]);
   const [kmbRoutes, setKmbRoutes] = useState([]);
 
@@ -66,7 +70,8 @@ function Routes() {
       console.log("responseData = ", responseData);
 
       if (responseData) {
-        setKmbRoutes(responseData.busRouteList);
+        const uniqBusRouteList = _.uniqBy(responseData.busRouteList, "route");
+        setKmbRoutes(uniqBusRouteList);
       }
     }
   };
@@ -81,14 +86,33 @@ function Routes() {
     setKmbChecked(true);
   };
 
+  const handleOutboundRadioButtonClick = () => {
+    setOutboundChecked(true);
+    setInboundChecked(false);
+  };
+
+  const handleInboundRadioButtonClick = () => {
+    setOutboundChecked(false);
+    setInboundChecked(true);
+  };
+
   const handleSearchTextChange = (text) => {
     setSearchText(text);
   };
 
   const handleListItemClick = (companyId, routeStr) => {
+    let direction = "";
+    if (outboundChecked) {
+      direction = "outbound";
+    }
+    if (inboundChecked) {
+      direction = "inbound";
+    }
+
     navigation.navigate(t("busRoute"), {
       companyId: companyId,
       routeStr: routeStr,
+      direction: direction,
     });
   };
 
@@ -168,8 +192,8 @@ function Routes() {
     return kmbRoutesView;
   };
 
-  const renderRadioButtonView = () => {
-    const radioButtonView = (
+  const renderBusCompanyRadioButtonView = () => {
+    const busCompanyRadioButtonView = (
       <View style={styles.radioButtonContainer}>
         <TouchableOpacity onPress={() => handleNwfbOrCtbRadioButtonClick()}>
           <CustomRadioButton
@@ -185,7 +209,24 @@ function Routes() {
         </TouchableOpacity>
       </View>
     );
-    return radioButtonView;
+    return busCompanyRadioButtonView;
+  };
+
+  const renderOutboundOrInboundRadioButtonView = () => {
+    const outboundOrInboundRadioButtonView = (
+      <View style={styles.radioButtonContainer}>
+        <TouchableOpacity onPress={() => handleOutboundRadioButtonClick()}>
+          <CustomRadioButton text={t("outbound")} checked={outboundChecked} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ marginLeft: 10 }}
+          onPress={() => handleInboundRadioButtonClick()}
+        >
+          <CustomRadioButton text={t("inbound")} checked={inboundChecked} />
+        </TouchableOpacity>
+      </View>
+    );
+    return outboundOrInboundRadioButtonView;
   };
 
   const renderRoutesView = () => {
@@ -229,7 +270,8 @@ function Routes() {
       style={styles.container}
       contentContainerStyle={{ paddingBottom: 30 }}
     >
-      {renderRadioButtonView()}
+      {renderBusCompanyRadioButtonView()}
+      {renderOutboundOrInboundRadioButtonView()}
       {renderRoutesView()}
     </ScrollView>
   );
