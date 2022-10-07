@@ -41,19 +41,20 @@ function BusRouteStop() {
     if (route.params) {
       const companyId = route.params.companyId;
       const routeStr = route.params.routeStr;
-      if (companyId && routeStr) {
-        getBusRouteStop(companyId, routeStr);
+      const direction = route.params.direction;
+      if (companyId && routeStr && direction) {
+        getBusRouteStop(companyId, routeStr, direction);
       }
     }
   }, [route.params]);
 
-  const getBusRouteStop = async (companyId, routeStr) => {
+  const getBusRouteStop = async (companyId, routeStr, direction) => {
     if (companyId === "NWFB" || companyId === "CTB") {
       const response = await axios.get(`${rootUrl}/bus-route-stop`, {
         params: {
           companyId: companyId,
           routeStr: routeStr,
-          direction: "outbound",
+          direction: direction,
         },
       });
 
@@ -69,7 +70,7 @@ function BusRouteStop() {
       const response = await axios.get(`${rootUrl}/kmb/bus-route-stop`, {
         params: {
           route: routeStr,
-          direction: "outbound",
+          direction: direction,
         },
       });
 

@@ -27,19 +27,20 @@ function BusRoute() {
   const navigation = useNavigation();
   const { t, i18n } = useTranslation();
 
-  const [busRoute, setBusRoute] = useState([]);
+  const [busRoute, setBusRoute] = useState({});
 
   useEffect(() => {
     if (route.params) {
       const companyId = route.params.companyId;
       const routeStr = route.params.routeStr;
-      if (companyId && routeStr) {
-        getBusRoute(companyId, routeStr);
+      const direction = route.params.direction;
+      if (companyId && routeStr && direction) {
+        getBusRoute(companyId, routeStr, direction);
       }
     }
   }, [route.params]);
 
-  const getBusRoute = async (companyId, routeStr) => {
+  const getBusRoute = async (companyId, routeStr, direction) => {
     if (companyId === "NWFB" || companyId === "CTB") {
       const response = await axios.get(`${rootUrl}/bus-route`, {
         params: {
@@ -60,7 +61,7 @@ function BusRoute() {
       const response = await axios.get(`${rootUrl}/kmb/bus-route`, {
         params: {
           route: routeStr,
-          direction: "outbound",
+          direction: direction,
           serviceType: 1,
         },
       });
@@ -134,7 +135,8 @@ function BusRoute() {
               onPress={() =>
                 handleEnterButtonClick(
                   route.params.companyId,
-                  route.params.routeStr
+                  route.params.routeStr,
+                  route.params.direction
                 )
               }
             >
@@ -156,10 +158,11 @@ function BusRoute() {
     return busRouteView;
   };
 
-  const handleEnterButtonClick = (companyId, routeStr) => {
+  const handleEnterButtonClick = (companyId, routeStr, direction) => {
     navigation.navigate(t("busRouteStop"), {
       companyId: companyId,
       routeStr: routeStr,
+      direction: direction,
     });
   };
 
