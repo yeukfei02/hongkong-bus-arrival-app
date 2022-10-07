@@ -94,6 +94,23 @@ function BusRoute() {
   const getDirectionText = (busRoute) => {
     let directionText = "";
 
+    if (busRoute.co && (busRoute.co === "NWFB" || busRoute.co === "CTB")) {
+      const direction = route.params.direction;
+      if (direction === "outbound") {
+        directionText = formatDirectionText();
+      } else if (direction === "inbound") {
+        directionText = formatDirectionTextReversed();
+      }
+    } else {
+      directionText = formatDirectionText();
+    }
+
+    return directionText;
+  };
+
+  const formatDirectionText = () => {
+    let directionText = "";
+
     if (i18n.language) {
       switch (i18n.language) {
         case "eng":
@@ -104,6 +121,28 @@ function BusRoute() {
           break;
         case "zh_cn":
           directionText = `From ${busRoute.orig_sc} to ${busRoute.dest_sc}`;
+          break;
+        default:
+          break;
+      }
+    }
+
+    return directionText;
+  };
+
+  const formatDirectionTextReversed = () => {
+    let directionText = "";
+
+    if (i18n.language) {
+      switch (i18n.language) {
+        case "eng":
+          directionText = `From ${busRoute.dest_en} to ${busRoute.orig_en}`;
+          break;
+        case "zh_hk":
+          directionText = `From ${busRoute.dest_tc} to ${busRoute.orig_tc}`;
+          break;
+        case "zh_cn":
+          directionText = `From ${busRoute.dest_sc} to ${busRoute.orig_sc}`;
           break;
         default:
           break;
