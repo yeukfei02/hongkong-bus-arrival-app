@@ -126,6 +126,18 @@ function Settings() {
     Linking.openURL(`https://github.com/yeukfei02`);
   };
 
+  const handleIosIconClick = () => {
+    Linking.openURL(
+      `https://apps.apple.com/us/app/hong-kong-minibus-arrival/id6443601128`
+    );
+  };
+
+  const handleAndroidIconClick = () => {
+    Linking.openURL(
+      `https://play.google.com/store/apps/details?id=com.donaldwu.hongkongminibusarrivalapp`
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Card style={styles.contactUsContainer}>
@@ -145,6 +157,29 @@ function Settings() {
             size={40}
             color="black"
             onPress={() => handleGithubClick()}
+          />
+        </View>
+      </Card>
+
+      <Card style={styles.contactUsContainer}>
+        <Text style={styles.contactUsTextStyle}>
+          {t("hongkongMinibusArrivalApp")}
+        </Text>
+
+        <View style={{ marginVertical: 5 }}></View>
+
+        <View style={styles.iconContainer}>
+          <AntDesign
+            name="apple1"
+            size={40}
+            color="black"
+            onPress={() => handleIosIconClick()}
+          />
+          <AntDesign
+            name="android1"
+            size={40}
+            color="black"
+            onPress={() => handleAndroidIconClick()}
           />
         </View>
       </Card>
