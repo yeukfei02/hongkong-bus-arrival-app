@@ -28,6 +28,7 @@ function BusArrivalTime() {
   const route = useRoute();
   const { t } = useTranslation();
 
+  const [loading, setLoading] = useState(true);
   const [busArrivalTime, setBusArrivalTime] = useState([]);
 
   useEffect(() => {
@@ -55,6 +56,7 @@ function BusArrivalTime() {
         console.log("responseData = ", responseData);
 
         if (responseData) {
+          setLoading(false);
           setBusArrivalTime(responseData.busArrivalTime);
         }
       }
@@ -70,6 +72,7 @@ function BusArrivalTime() {
         console.log("responseData = ", responseData);
 
         if (responseData) {
+          setLoading(false);
           setBusArrivalTime(responseData.busArrivalTimeKmb);
         }
       }
@@ -77,55 +80,67 @@ function BusArrivalTime() {
   };
 
   const renderBusArrivalTime = () => {
-    let busArrivalTimeView = null;
+    let busArrivalTimeView = (
+      <View>
+        <Card style={styles.cardContainer}>
+          <Card.Content style={{ alignSelf: "center" }}>
+            <Title>{t("pleaseWait")}</Title>
+          </Card.Content>
+        </Card>
+      </View>
+    );
 
-    if (!_.isEmpty(busArrivalTime)) {
-      busArrivalTimeView = busArrivalTime.map((item, i) => {
-        return (
-          <View key={i}>
+    if (!loading) {
+      if (!_.isEmpty(busArrivalTime)) {
+        busArrivalTimeView = busArrivalTime.map((item, i) => {
+          return (
+            <View key={i}>
+              <Card style={styles.cardContainer}>
+                <Card.Title
+                  title={`${t("next")} ${item.eta_seq} ${t("bus")}`}
+                />
+                <Card.Content>
+                  <Title>
+                    {t("remainingTime")} {getMinutesDiffStr(item.eta)}
+                  </Title>
+                </Card.Content>
+              </Card>
+            </View>
+          );
+        });
+      } else {
+        busArrivalTimeView = (
+          <View>
             <Card style={styles.cardContainer}>
-              <Card.Title title={`${t("next")} ${item.eta_seq} ${t("bus")}`} />
-              <Card.Content>
-                <Title>
-                  {t("remainingTime")} {getMinutesDiffStr(item.eta)}
-                </Title>
+              <Card.Content style={{ alignSelf: "center" }}>
+                <Title style={{ color: "red" }}>{t("noData")}</Title>
               </Card.Content>
             </Card>
           </View>
         );
-      });
-    } else {
-      busArrivalTimeView = (
-        <View>
-          <Card style={styles.cardContainer}>
-            <Card.Content style={{ alignSelf: "center" }}>
-              <Title>{t("pleaseWait")}</Title>
-            </Card.Content>
-          </Card>
-        </View>
-      );
+      }
     }
 
     return busArrivalTimeView;
   };
 
   const getMinutesDiffStr = (timestamp) => {
-    let minutesDiffStr = "";
+    let minutesDiffStr = t("noData");
 
-    const now = moment().tz("Asia/Hong_Kong");
-    const itemTime = moment(timestamp).tz("Asia/Hong_Kong");
+    if (timestamp) {
+      const now = moment().tz("Asia/Hong_Kong");
+      const itemTime = moment(timestamp).tz("Asia/Hong_Kong");
+      console.log("now = ", now);
+      console.log("itemTime = ", itemTime);
 
-    // console.log("now = ", now);
-    // console.log("itemTime = ", itemTime);
+      const minutesDiff = itemTime.diff(now, "minute");
+      console.log("minutesDiff = ", minutesDiff);
 
-    const minutesDiff = itemTime.diff(now, "minute");
-
-    // console.log("minutesDiff = ", minutesDiff);
-
-    if (minutesDiff > 0) {
-      minutesDiffStr = `${minutesDiff} minutes`;
-    } else {
-      minutesDiffStr = `Arriving`;
+      if (minutesDiff <= 1) {
+        minutesDiffStr = `Arriving`;
+      } else {
+        minutesDiffStr = `${minutesDiff} minutes`;
+      }
     }
 
     return minutesDiffStr;
