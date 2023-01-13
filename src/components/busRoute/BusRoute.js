@@ -27,6 +27,7 @@ function BusRoute() {
   const navigation = useNavigation();
   const { t, i18n } = useTranslation();
 
+  const [loading, setLoading] = useState(true);
   const [busRoute, setBusRoute] = useState({});
 
   useEffect(() => {
@@ -54,6 +55,7 @@ function BusRoute() {
         console.log("responseData = ", responseData);
 
         if (responseData) {
+          setLoading(false);
           setBusRoute(responseData.busRoute);
         }
       }
@@ -71,6 +73,7 @@ function BusRoute() {
         console.log("responseData = ", responseData);
 
         if (responseData) {
+          setLoading(false);
           setBusRoute(responseData.busRouteKmb);
         }
       }
@@ -153,45 +156,53 @@ function BusRoute() {
   };
 
   const renderBusRouteView = () => {
-    let busRouteView = null;
+    let busRouteView = (
+      <Card style={styles.cardContainer}>
+        <Card.Content style={{ alignSelf: "center" }}>
+          <Title>{t("pleaseWait")}</Title>
+        </Card.Content>
+      </Card>
+    );
 
-    if (!_.isEmpty(busRoute)) {
-      busRouteView = (
-        <Card style={styles.cardContainer}>
-          <Card.Title
-            title={busRoute.route}
-            subtitle={getCompanyText(busRoute.co)}
-          />
-          <Card.Content>
-            <Paragraph>{getDirectionText(busRoute)}</Paragraph>
-          </Card.Content>
-          <Card.Actions>
-            <Button
-              mode="outlined"
-              style={{ padding: 5 }}
-              labelStyle={{ fontSize: 15 }}
-              uppercase={false}
-              onPress={() =>
-                handleEnterButtonClick(
-                  route.params.companyId,
-                  route.params.routeStr,
-                  route.params.direction
-                )
-              }
-            >
-              Enter
-            </Button>
-          </Card.Actions>
-        </Card>
-      );
-    } else {
-      busRouteView = (
-        <Card style={styles.cardContainer}>
-          <Card.Content style={{ alignSelf: "center" }}>
-            <Title>{t("pleaseWait")}</Title>
-          </Card.Content>
-        </Card>
-      );
+    if (!loading) {
+      if (!_.isEmpty(busRoute)) {
+        busRouteView = (
+          <Card style={styles.cardContainer}>
+            <Card.Title
+              title={busRoute.route}
+              subtitle={getCompanyText(busRoute.co)}
+            />
+            <Card.Content>
+              <Paragraph>{getDirectionText(busRoute)}</Paragraph>
+            </Card.Content>
+            <Card.Actions>
+              <Button
+                mode="outlined"
+                style={{ padding: 5 }}
+                labelStyle={{ fontSize: 15 }}
+                uppercase={false}
+                onPress={() =>
+                  handleEnterButtonClick(
+                    route.params.companyId,
+                    route.params.routeStr,
+                    route.params.direction
+                  )
+                }
+              >
+                Enter
+              </Button>
+            </Card.Actions>
+          </Card>
+        );
+      } else {
+        busRouteView = (
+          <Card style={styles.cardContainer}>
+            <Card.Content style={{ alignSelf: "center" }}>
+              <Title style={{ color: "red" }}>{t("noData")}</Title>
+            </Card.Content>
+          </Card>
+        );
+      }
     }
 
     return busRouteView;

@@ -35,6 +35,7 @@ function BusRouteStop() {
   const navigation = useNavigation();
   const { t, i18n } = useTranslation();
 
+  const [loading, setLoading] = useState(true);
   const [busRouteStop, setBusRouteStop] = useState([]);
 
   useEffect(() => {
@@ -63,6 +64,7 @@ function BusRouteStop() {
         console.log("responseData = ", responseData);
 
         if (responseData) {
+          setLoading(false);
           setBusRouteStop(responseData.busRouteStop);
         }
       }
@@ -79,6 +81,7 @@ function BusRouteStop() {
         console.log("responseData = ", responseData);
 
         if (responseData) {
+          setLoading(false);
           setBusRouteStop(responseData.busRouteStopKmb);
         }
       }
@@ -108,48 +111,60 @@ function BusRouteStop() {
   };
 
   const renderBusRouteStop = () => {
-    let busRouteStopView = null;
+    let busRouteStopView = (
+      <View>
+        <Card style={styles.cardContainer}>
+          <Card.Content style={{ alignSelf: "center" }}>
+            <Title>{t("pleaseWait")}</Title>
+          </Card.Content>
+        </Card>
+      </View>
+    );
 
-    if (!_.isEmpty(busRouteStop)) {
-      busRouteStopView = busRouteStop.map((item, i) => {
-        return (
-          <View key={i}>
+    if (!loading) {
+      if (!_.isEmpty(busRouteStop)) {
+        busRouteStopView = busRouteStop.map((item, i) => {
+          return (
+            <View key={i}>
+              <Card style={styles.cardContainer}>
+                <Card.Content>
+                  <Title>{getNameText(item.stop)}</Title>
+                  <Paragraph
+                    style={styles.openInMap}
+                    onPress={() =>
+                      handleOpenInMap(item.stop.lat, item.stop.long)
+                    }
+                  >
+                    Open in map
+                  </Paragraph>
+                </Card.Content>
+                <Card.Actions>
+                  <Button
+                    mode="outlined"
+                    style={{ padding: 5 }}
+                    labelStyle={{ fontSize: 15 }}
+                    uppercase={false}
+                    onPress={() => handleEnterButtonClick(item.stop.stop)}
+                  >
+                    Enter
+                  </Button>
+                </Card.Actions>
+              </Card>
+              {renderArrowDownIcon(i)}
+            </View>
+          );
+        });
+      } else {
+        busRouteStopView = (
+          <View>
             <Card style={styles.cardContainer}>
-              <Card.Content>
-                <Title>{getNameText(item.stop)}</Title>
-                <Paragraph
-                  style={styles.openInMap}
-                  onPress={() => handleOpenInMap(item.stop.lat, item.stop.long)}
-                >
-                  Open in map
-                </Paragraph>
+              <Card.Content style={{ alignSelf: "center" }}>
+                <Title style={{ color: "red" }}>{t("noData")}</Title>
               </Card.Content>
-              <Card.Actions>
-                <Button
-                  mode="outlined"
-                  style={{ padding: 5 }}
-                  labelStyle={{ fontSize: 15 }}
-                  uppercase={false}
-                  onPress={() => handleEnterButtonClick(item.stop.stop)}
-                >
-                  Enter
-                </Button>
-              </Card.Actions>
             </Card>
-            {renderArrowDownIcon(i)}
           </View>
         );
-      });
-    } else {
-      busRouteStopView = (
-        <View>
-          <Card style={styles.cardContainer}>
-            <Card.Content style={{ alignSelf: "center" }}>
-              <Title>{t("pleaseWait")}</Title>
-            </Card.Content>
-          </Card>
-        </View>
-      );
+      }
     }
 
     return busRouteStopView;
