@@ -21,7 +21,7 @@ function TabView() {
             let icon = null;
 
             switch (route.name) {
-              case "NearMe":
+              case "Near Me":
               case "靠近我":
                 if (focused) {
                   icon = (
