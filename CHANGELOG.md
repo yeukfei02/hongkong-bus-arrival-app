@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/yeukfei02/hongkong-bus-arrival-app/compare/v0.1.2...v0.1.3) (2023-01-31)
+
+
+### Features
+
+* 🎸 update to expo 47 and use m1 for eas ([d8ee58f](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/d8ee58fc9e0917fdbfb742072d6cd0d2fb1950b8))
+
+
+### Bug Fixes
+
+* 🐛 fix settings str if checking ([70b9acb](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/70b9acbb38a3de230545984fc10388aca35cb6e8))
+* 🐛 update app.json ([d4bda93](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/d4bda93eadb73d36284f6c55896d7bd096e55059))
+
 ### [0.1.2](https://github.com/yeukfei02/hongkong-bus-arrival-app/compare/v0.1.1...v0.1.2) (2023-01-31)
 
 
