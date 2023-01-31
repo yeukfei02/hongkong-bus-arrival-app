@@ -3,7 +3,7 @@
     "name": "Hong Kong Bus Arrival App",
     "slug": "hongkong-bus-arrival-app",
     "platforms": ["ios", "android"],
-    "version": "0.1.2",
+    "version": "0.1.3",
     "orientation": "portrait",
     "icon": "./assets/appstore-icon.png",
     "splash": {
@@ -18,7 +18,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.donaldwu.hongkongbusarrivalapp",
-      "buildNumber": "0.1.2",
+      "buildNumber": "0.1.3",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Hong Kong Bus Arrival App requires your location so that we can find related bus arrival information for you",
         "NSLocationAlwaysUsageDescription": "Hong Kong Bus Arrival App requires your location so that we can find related bus arrival information for you",
@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "com.donaldwu.hongkongbusarrivalapp",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
     },
     "description": "Hong Kong Bus Arrival App",
