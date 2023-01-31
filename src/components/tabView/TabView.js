@@ -64,6 +64,7 @@ function TabView() {
                 break;
               case "Settings":
               case "設定":
+              case "设定":
                 if (focused) {
                   icon = <Ionicons name="settings" size={size} color={color} />;
                 } else {
