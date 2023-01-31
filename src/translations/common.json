@@ -1,11 +1,16 @@
 {
   "eng": {
     "translation": {
+      "nearMe": "Near Me",
+      "nearbyBusStop": "Nearby Bus Stop",
       "routes": "Routes",
+      "searchBusRoutes": "Search Bus Routes",
       "settings": "Settings",
+      "settingsOrContactUs": "Settings/ContactUs",
       "busRoute": "BusRoute",
       "busRouteStop": "BusRouteStop",
       "busArrivalTime": "BusArrivalTime",
+      "busStopArrivalTime": "BusStopArrivalTime",
 
       "nwfbAndCtb": "New World First Bus/Citybus",
       "nwfb": "New World First Bus",
@@ -32,11 +37,16 @@
   },
   "zh_hk": {
     "translation": {
+      "nearMe": "靠近我",
+      "nearbyBusStop": "附近巴士站",
       "routes": "路線",
+      "searchBusRoutes": "搜索巴士路線",
       "settings": "設定",
+      "settingsOrContactUs": "設定/聯繫我們",
       "busRoute": "巴士路線",
       "busRouteStop": "巴士路線站",
       "busArrivalTime": "巴士到達時間",
+      "busStopArrivalTime": "巴士站到達時間",
 
       "nwfbAndCtb": "新巴/城巴",
       "nwfb": "新巴",
@@ -63,11 +73,16 @@
   },
   "zh_cn": {
     "translation": {
+      "nearMe": "靠近我",
+      "nearbyBusStop": "附近巴士站",
       "routes": "路线",
-      "settings": "設定",
+      "searchBusRoutes": "搜索巴士路线",
+      "settings": "设定",
+      "settingsOrContactUs": "设定/联系我们",
       "busRoute": "巴士路线",
       "busRouteStop": "巴士路线站",
       "busArrivalTime": "巴士到达时间",
+      "busStopArrivalTime": "巴士站到达时间",
 
       "nwfbAndCtb": "新巴/城巴",
       "nwfb": "新巴",

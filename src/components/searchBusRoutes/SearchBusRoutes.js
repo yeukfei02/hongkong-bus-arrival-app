@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function Routes() {
+function SearchBusRoutes() {
   const navigation = useNavigation();
   const { t } = useTranslation();
 
@@ -277,4 +277,4 @@ function Routes() {
   );
 }
 
-export default Routes;
+export default SearchBusRoutes;

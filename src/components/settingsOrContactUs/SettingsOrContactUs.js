@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function Settings() {
+function SettingsOrContactUs() {
   const { t, i18n } = useTranslation();
 
   const [open, setOpen] = useState(false);
@@ -197,4 +197,4 @@ function Settings() {
   );
 }
 
-export default Settings;
+export default SettingsOrContactUs;
