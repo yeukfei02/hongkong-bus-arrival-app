@@ -7,6 +7,10 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "ios": {
+        "resourceClass": "m1-medium"
+      }
+    }
   }
 }
