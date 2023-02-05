@@ -137,9 +137,9 @@ function BusArrivalTime() {
       console.log("minutesDiff = ", minutesDiff);
 
       if (minutesDiff <= 1) {
-        minutesDiffStr = `Arriving`;
+        minutesDiffStr = `${t("arriving")}`;
       } else {
-        minutesDiffStr = `${minutesDiff} minutes`;
+        minutesDiffStr = `${minutesDiff} ${t("minutes")}`;
       }
     }
 
