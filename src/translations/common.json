@@ -12,6 +12,9 @@
       "busArrivalTime": "BusArrivalTime",
       "busStopArrivalTime": "BusStopArrivalTime",
 
+      "arriving": "Arriving",
+      "minutes": "Minutes",
+
       "nwfbAndCtb": "New World First Bus/Citybus",
       "nwfb": "New World First Bus",
       "ctb": "Citybus",
@@ -48,6 +51,9 @@
       "busArrivalTime": "巴士到達時間",
       "busStopArrivalTime": "巴士站到達時間",
 
+      "arriving": "到達中",
+      "minutes": "分鐘",
+
       "nwfbAndCtb": "新巴/城巴",
       "nwfb": "新巴",
       "ctb": "城巴",
@@ -83,6 +89,9 @@
       "busRouteStop": "巴士路线站",
       "busArrivalTime": "巴士到达时间",
       "busStopArrivalTime": "巴士站到达时间",
+
+      "arriving": "到达中",
+      "minutes": "分钟",
 
       "nwfbAndCtb": "新巴/城巴",
       "nwfb": "新巴",
