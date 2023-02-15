@@ -80,7 +80,7 @@ function BusStopArrivalTime() {
       const response = await axios.get(`${rootUrl}/nlb/bus-arrival-time`, {
         params: {
           busStopId: busStopId,
-          routeId: ''
+          routeId: "",
         },
       });
       if (response && response.status === 200) {

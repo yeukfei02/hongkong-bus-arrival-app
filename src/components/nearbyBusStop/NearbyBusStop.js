@@ -139,7 +139,7 @@ function NearbyBusStop() {
       const nlbBusStopListResponseData = nlbBusStopListResponse.data;
       if (nlbBusStopListResponseData) {
         const filteredNlbNearMeList =
-        nlbBusStopListResponseData.busStopList.filter((item) => {
+          nlbBusStopListResponseData.busStopList.filter((item) => {
             if (
               _.inRange(latitude, item.lat - 0.0015, item.lat + 0.0015) &&
               _.inRange(longitude, item.long - 0.0015, item.long + 0.0015)
@@ -164,23 +164,23 @@ function NearbyBusStop() {
     if (i18n.language) {
       switch (i18n.language) {
         case "eng":
-          if (company === 'nwfbOrCtb' || company === 'kmb') {
+          if (company === "nwfbOrCtb" || company === "kmb") {
             nameText = item.name_en;
-          } else if (company === 'nlb') {
+          } else if (company === "nlb") {
             nameText = item.stopName_en;
           }
           break;
         case "zh_hk":
-          if (company === 'nwfbOrCtb' || company === 'kmb') {
+          if (company === "nwfbOrCtb" || company === "kmb") {
             nameText = item.name_tc;
-          } else if (company === 'nlb') {
+          } else if (company === "nlb") {
             nameText = item.stopName_tc;
           }
           break;
         case "zh_cn":
-          if (company === 'nwfbOrCtb' || company === 'kmb') {
+          if (company === "nwfbOrCtb" || company === "kmb") {
             nameText = item.name_sc;
-          } else if (company === 'nlb') {
+          } else if (company === "nlb") {
             nameText = item.stopName_sc;
           }
           break;
@@ -204,7 +204,11 @@ function NearbyBusStop() {
     );
 
     if (!loading) {
-      if (!_.isEmpty(nwfbOrCtbBusStopList) || !_.isEmpty(kmbBusStopList) || !_.isEmpty(nlbBusStopList)) {
+      if (
+        !_.isEmpty(nwfbOrCtbBusStopList) ||
+        !_.isEmpty(kmbBusStopList) ||
+        !_.isEmpty(nlbBusStopList)
+      ) {
         // nwfbOrCtb
         const formattedNwfbOrCtbBusStopList = nwfbOrCtbBusStopList.map(
           (item, i) => {
@@ -212,7 +216,7 @@ function NearbyBusStop() {
               <View key={i}>
                 <Card style={styles.cardContainer}>
                   <Card.Content>
-                    <Title>{getNameText(item, 'nwfbOrCtb')}</Title>
+                    <Title>{getNameText(item, "nwfbOrCtb")}</Title>
                     <Paragraph
                       style={styles.openInMap}
                       onPress={() => handleOpenInMap(item.lat, item.long)}
@@ -245,7 +249,7 @@ function NearbyBusStop() {
             <View key={i}>
               <Card style={styles.cardContainer}>
                 <Card.Content>
-                  <Title>{getNameText(item, 'kmb')}</Title>
+                  <Title>{getNameText(item, "kmb")}</Title>
                   <Paragraph
                     style={styles.openInMap}
                     onPress={() => handleOpenInMap(item.lat, item.long)}
@@ -275,7 +279,7 @@ function NearbyBusStop() {
             <View key={i}>
               <Card style={styles.cardContainer}>
                 <Card.Content>
-                  <Title>{getNameText(item, 'nlb')}</Title>
+                  <Title>{getNameText(item, "nlb")}</Title>
                   <Paragraph
                     style={styles.openInMap}
                     onPress={() => handleOpenInMap(item.lat, item.long)}
