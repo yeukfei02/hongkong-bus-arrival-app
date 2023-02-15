@@ -108,7 +108,7 @@ function SearchBusRoutes() {
     setNwfbOrCtbChecked(false);
     setKmbChecked(false);
     setNlbChecked(true);
-  }
+  };
 
   const handleOutboundRadioButtonClick = () => {
     setOutboundChecked(true);
