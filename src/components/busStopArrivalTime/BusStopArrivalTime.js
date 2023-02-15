@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 
 function BusStopArrivalTime() {
   const route = useRoute();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [loading, setLoading] = useState(true);
   const [busStopArrivalTime, setBusStopArrivalTime] = useState({});
@@ -34,28 +34,76 @@ function BusStopArrivalTime() {
   useEffect(() => {
     if (route.params) {
       const busStopId = route.params.busStopId;
+      const company = route.params.company;
       console.log("busStopId = ", busStopId);
-      if (busStopId) {
-        getBusStopArrivalTime(busStopId);
+      console.log("company = ", company);
+
+      if (busStopId && company) {
+        getBusStopArrivalTime(busStopId, company);
       }
     }
   }, [route.params]);
 
-  const getBusStopArrivalTime = async (busStopId) => {
-    const response = await axios.get(`${rootUrl}/kmb/bus-stop-arrival-time`, {
-      params: {
-        busStopId: busStopId,
-      },
-    });
-    if (response && response.status === 200) {
-      const responseData = response.data;
-      console.log("responseData = ", responseData);
+  const getBusStopArrivalTime = async (busStopId, company) => {
+    let result = null;
 
-      if (responseData) {
-        setLoading(false);
-        setBusStopArrivalTime(responseData.busStopArrivalTimeKmb);
+    if (company === "nwfbOrCtb") {
+      const response = await axios.get(`${rootUrl}/bus-stop-arrival-time`, {
+        params: {
+          busStopId: busStopId,
+          language: getLanguageText(),
+        },
+      });
+      if (response && response.status === 200) {
+        const responseData = response.data;
+        console.log("responseData = ", responseData);
+
+        if (responseData) {
+          result = responseData.busStopArrivalTime;
+        }
+      }
+    } else if (company === "kmb") {
+      const response = await axios.get(`${rootUrl}/kmb/bus-stop-arrival-time`, {
+        params: {
+          busStopId: busStopId,
+        },
+      });
+      if (response && response.status === 200) {
+        const responseData = response.data;
+        console.log("responseData = ", responseData);
+
+        if (responseData) {
+          result = responseData.busStopArrivalTimeKmb;
+        }
       }
     }
+
+    if (result) {
+      setLoading(false);
+      setBusStopArrivalTime(result);
+    }
+  };
+
+  const getLanguageText = () => {
+    let languageText = "zh-hant";
+
+    if (i18n.language) {
+      switch (i18n.language) {
+        case "eng":
+          languageText = "en";
+          break;
+        case "zh_hk":
+          languageText = "zh-hant";
+          break;
+        case "zh_cn":
+          languageText = "zh-hans";
+          break;
+        default:
+          break;
+      }
+    }
+
+    return languageText;
   };
 
   const renderBusStopArrivalTime = () => {
