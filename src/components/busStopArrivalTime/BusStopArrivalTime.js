@@ -76,6 +76,21 @@ function BusStopArrivalTime() {
           result = responseData.busStopArrivalTimeKmb;
         }
       }
+    } else if (company === "nlb") {
+      const response = await axios.get(`${rootUrl}/nlb/bus-arrival-time`, {
+        params: {
+          busStopId: busStopId,
+          routeId: ''
+        },
+      });
+      if (response && response.status === 200) {
+        const responseData = response.data;
+        console.log("responseData = ", responseData);
+
+        if (responseData) {
+          result = responseData.busArrivalTimeNlb;
+        }
+      }
     }
 
     if (result) {

@@ -48,6 +48,7 @@ function NearbyBusStop() {
 
   const [nwfbOrCtbBusStopList, setNwfbOrCtbBusStopList] = useState([]);
   const [kmbBusStopList, setKmbBusStopList] = useState([]);
+  const [nlbBusStopList, setNlbBusStopList] = useState([]);
 
   useEffect(() => {
     getUserCurrentLocation();
@@ -84,6 +85,7 @@ function NearbyBusStop() {
   };
 
   const getNearMeList = async (latitude, longitude) => {
+    // nwfbOrCtb
     const nwfbOrCtbResponse = await axios.get(`${rootUrl}/bus-stop-list`);
     if (nwfbOrCtbResponse && nwfbOrCtbResponse.status === 200) {
       const nwfbOrCtbBusStopListResponseData = nwfbOrCtbResponse.data;
@@ -105,6 +107,7 @@ function NearbyBusStop() {
       }
     }
 
+    // kmb
     const kmbBusStopListResponse = await axios.get(
       `${rootUrl}/kmb/bus-stop-list`
     );
@@ -128,22 +131,58 @@ function NearbyBusStop() {
       }
     }
 
+    // nlb
+    const nlbBusStopListResponse = await axios.get(
+      `${rootUrl}/nlb/bus-stop-list`
+    );
+    if (nlbBusStopListResponse && nlbBusStopListResponse.status === 200) {
+      const nlbBusStopListResponseData = nlbBusStopListResponse.data;
+      if (nlbBusStopListResponseData) {
+        const filteredNlbNearMeList =
+        nlbBusStopListResponseData.busStopList.filter((item) => {
+            if (
+              _.inRange(latitude, item.lat - 0.0015, item.lat + 0.0015) &&
+              _.inRange(longitude, item.long - 0.0015, item.long + 0.0015)
+            ) {
+              return item;
+            }
+          });
+        console.log(
+          "filteredNlbNearMeList.length = ",
+          filteredNlbNearMeList.length
+        );
+        setNlbBusStopList(filteredNlbNearMeList);
+      }
+    }
+
     setLoading(false);
   };
 
-  const getNameText = (item) => {
+  const getNameText = (item, company) => {
     let nameText = "";
 
     if (i18n.language) {
       switch (i18n.language) {
         case "eng":
-          nameText = item.name_en;
+          if (company === 'nwfbOrCtb' || company === 'kmb') {
+            nameText = item.name_en;
+          } else if (company === 'nlb') {
+            nameText = item.stopName_en;
+          }
           break;
         case "zh_hk":
-          nameText = item.name_tc;
+          if (company === 'nwfbOrCtb' || company === 'kmb') {
+            nameText = item.name_tc;
+          } else if (company === 'nlb') {
+            nameText = item.stopName_tc;
+          }
           break;
         case "zh_cn":
-          nameText = item.name_sc;
+          if (company === 'nwfbOrCtb' || company === 'kmb') {
+            nameText = item.name_sc;
+          } else if (company === 'nlb') {
+            nameText = item.stopName_sc;
+          }
           break;
         default:
           break;
@@ -165,14 +204,15 @@ function NearbyBusStop() {
     );
 
     if (!loading) {
-      if (!_.isEmpty(nwfbOrCtbBusStopList) || !_.isEmpty(kmbBusStopList)) {
+      if (!_.isEmpty(nwfbOrCtbBusStopList) || !_.isEmpty(kmbBusStopList) || !_.isEmpty(nlbBusStopList)) {
+        // nwfbOrCtb
         const formattedNwfbOrCtbBusStopList = nwfbOrCtbBusStopList.map(
           (item, i) => {
             return (
               <View key={i}>
                 <Card style={styles.cardContainer}>
                   <Card.Content>
-                    <Title>{getNameText(item)}</Title>
+                    <Title>{getNameText(item, 'nwfbOrCtb')}</Title>
                     <Paragraph
                       style={styles.openInMap}
                       onPress={() => handleOpenInMap(item.lat, item.long)}
@@ -199,12 +239,13 @@ function NearbyBusStop() {
           }
         );
 
+        // kmb
         const formattedKmbBusStopList = kmbBusStopList.map((item, i) => {
           return (
             <View key={i}>
               <Card style={styles.cardContainer}>
                 <Card.Content>
-                  <Title>{getNameText(item)}</Title>
+                  <Title>{getNameText(item, 'kmb')}</Title>
                   <Paragraph
                     style={styles.openInMap}
                     onPress={() => handleOpenInMap(item.lat, item.long)}
@@ -219,6 +260,37 @@ function NearbyBusStop() {
                     labelStyle={{ fontSize: 15 }}
                     uppercase={false}
                     onPress={() => handleEnterButtonClick(item.stop, "kmb")}
+                  >
+                    Enter
+                  </Button>
+                </Card.Actions>
+              </Card>
+            </View>
+          );
+        });
+
+        // nlb
+        const formattedNlbBusStopList = nlbBusStopList.map((item, i) => {
+          return (
+            <View key={i}>
+              <Card style={styles.cardContainer}>
+                <Card.Content>
+                  <Title>{getNameText(item, 'nlb')}</Title>
+                  <Paragraph
+                    style={styles.openInMap}
+                    onPress={() => handleOpenInMap(item.lat, item.long)}
+                  >
+                    Open in map
+                  </Paragraph>
+                </Card.Content>
+                <Card.Actions>
+                  <Button
+                    mode="outlined"
+                    style={{ padding: 5 }}
+                    labelStyle={{ fontSize: 15 }}
+                    uppercase={false}
+                    onPress={() => handleEnterButtonClick(item.stopId, "nlb")}
+                    disabled
                   >
                     Enter
                   </Button>
@@ -260,6 +332,22 @@ function NearbyBusStop() {
                   {t("kmb")}
                 </Text>
                 {formattedKmbBusStopList}
+              </View>
+            ) : null}
+            {!_.isEmpty(formattedNlbBusStopList) ? (
+              <View>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    fontWeight: "bold",
+                    color: "black",
+                    marginHorizontal: 25,
+                    marginVertical: 15,
+                  }}
+                >
+                  {t("nlb")}
+                </Text>
+                {formattedNlbBusStopList}
               </View>
             ) : null}
           </>
