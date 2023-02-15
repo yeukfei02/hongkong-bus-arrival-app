@@ -186,7 +186,9 @@ function NearbyBusStop() {
                       style={{ padding: 5 }}
                       labelStyle={{ fontSize: 15 }}
                       uppercase={false}
-                      onPress={() => handleEnterButtonClick(item.stop, 'nwfbOrCtb')}
+                      onPress={() =>
+                        handleEnterButtonClick(item.stop, "nwfbOrCtb")
+                      }
                     >
                       Enter
                     </Button>
@@ -216,7 +218,7 @@ function NearbyBusStop() {
                     style={{ padding: 5 }}
                     labelStyle={{ fontSize: 15 }}
                     uppercase={false}
-                    onPress={() => handleEnterButtonClick(item.stop, 'kmb')}
+                    onPress={() => handleEnterButtonClick(item.stop, "kmb")}
                   >
                     Enter
                   </Button>
@@ -281,7 +283,7 @@ function NearbyBusStop() {
   const handleEnterButtonClick = (busStopId, company) => {
     navigation.navigate(t("busStopArrivalTime"), {
       busStopId: busStopId,
-      company: company
+      company: company,
     });
   };
 
