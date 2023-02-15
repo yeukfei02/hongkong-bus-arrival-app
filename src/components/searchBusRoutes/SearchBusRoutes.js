@@ -37,18 +37,21 @@ function SearchBusRoutes() {
 
   const [nwfbOrCtbChecked, setNwfbOrCtbChecked] = useState(true);
   const [kmbChecked, setKmbChecked] = useState(false);
+  const [nlbChecked, setNlbChecked] = useState(false);
 
   const [outboundChecked, setOutboundChecked] = useState(true);
   const [inboundChecked, setInboundChecked] = useState(false);
 
   const [nwfbAndCtbRoutes, setNwfbAndCtbRoutes] = useState([]);
   const [kmbRoutes, setKmbRoutes] = useState([]);
+  const [nlbRoutes, setNlbRoutes] = useState([]);
 
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     getNwfbAndCtbRoutes();
     getKmbRoutes();
+    getNlbRoutes();
   }, []);
 
   const getNwfbAndCtbRoutes = async () => {
@@ -76,14 +79,35 @@ function SearchBusRoutes() {
     }
   };
 
+  const getNlbRoutes = async () => {
+    const response = await axios.get(`${rootUrl}/nlb/bus-route-list`);
+    if (response && response.status === 200) {
+      const responseData = response.data;
+      console.log("responseData = ", responseData);
+
+      if (responseData) {
+        const uniqBusRouteList = _.uniqBy(responseData.busRouteList, "routeNo");
+        setNlbRoutes(uniqBusRouteList);
+      }
+    }
+  };
+
   const handleNwfbOrCtbRadioButtonClick = () => {
     setNwfbOrCtbChecked(true);
     setKmbChecked(false);
+    setNlbChecked(false);
   };
 
   const handleKmbRadioButtonClick = () => {
     setNwfbOrCtbChecked(false);
     setKmbChecked(true);
+    setNlbChecked(false);
+  };
+
+  const handleNlbRadioButtonClick = () => {
+    setNwfbOrCtbChecked(false);
+    setKmbChecked(false);
+    setNlbChecked(true);
   };
 
   const handleOutboundRadioButtonClick = () => {
@@ -192,6 +216,44 @@ function SearchBusRoutes() {
     return kmbRoutesView;
   };
 
+  const renderNlbRoutes = (nlbRoutes) => {
+    let nlbRoutesView = null;
+
+    if (nlbRoutes) {
+      let nlbRoutesList = nlbRoutes;
+
+      if (searchText) {
+        nlbRoutesList = nlbRoutes.filter((item) => {
+          return item.routeNo.toUpperCase().includes(searchText.toUpperCase());
+        });
+      }
+
+      const nlbRoutesItemList = nlbRoutesList.map((item, i) => {
+        return (
+          <List.Item
+            key={i}
+            title={item.routeNo}
+            onPress={() => handleListItemClick("NLB", item.routeNo)}
+            left={(props) => <List.Icon {...props} icon="bus" />}
+          />
+        );
+      });
+
+      nlbRoutesView = (
+        <List.Section>
+          <List.Accordion
+            title={t("nlb")}
+            left={(props) => <List.Icon {...props} icon="bus" />}
+          >
+            {nlbRoutesItemList}
+          </List.Accordion>
+        </List.Section>
+      );
+    }
+
+    return nlbRoutesView;
+  };
+
   const renderBusCompanyRadioButtonView = () => {
     const busCompanyRadioButtonView = (
       <View style={styles.radioButtonContainer}>
@@ -206,6 +268,12 @@ function SearchBusRoutes() {
           onPress={() => handleKmbRadioButtonClick()}
         >
           <CustomRadioButton text={t("kmb")} checked={kmbChecked} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ marginLeft: 10 }}
+          onPress={() => handleNlbRadioButtonClick()}
+        >
+          <CustomRadioButton text={t("nlb")} checked={nlbChecked} />
         </TouchableOpacity>
       </View>
     );
@@ -244,6 +312,13 @@ function SearchBusRoutes() {
       routesView = (
         <View style={styles.accordionContainer}>
           {renderKmbRoutes(kmbRoutes)}
+        </View>
+      );
+    }
+    if (nlbChecked && nlbRoutes) {
+      routesView = (
+        <View style={styles.accordionContainer}>
+          {renderNlbRoutes(nlbRoutes)}
         </View>
       );
     }
