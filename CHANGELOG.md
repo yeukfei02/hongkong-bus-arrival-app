@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/yeukfei02/hongkong-bus-arrival-app/compare/v0.1.3...v0.1.4) (2023-02-16)
+
+
+### Features
+
+* 🎸 add nlb in near me page ([017f47e](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/017f47e2a5a0ce7856bfb1e2b4d2de906c66ea80))
+* 🎸 add nlb in search bus route page ([ee4d2e0](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/ee4d2e0fba5f942adcc563db9fa208111281fc75))
+* 🎸 add nwfbOrCtb near me api ([2397da4](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/2397da442d5d4dde38c3bd8b915c16f4f44c8df6))
+* 🎸 update bus arrival api and ui ([eba9acd](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/eba9acd4391ac47b55a9ddf1e3871edf00980f7a))
+
+
+### Bug Fixes
+
+* 🐛 fix arriving and minutes text ([ed53312](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/ed533121303e769c3487dfa3c37cee342249c626))
+* 🐛 fix expo doctor ([137a8cb](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/137a8cbddc8748b03e6b942eb5e745f89459952d))
+* 🐛 fix icon cannot show ([0ca2c5f](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/0ca2c5f9e26f97ded3176dbcd197fd9c5d4124e7))
+* 🐛 fix lint ([4965df3](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/4965df3b9599772749c7ba915738284c610a7d7d))
+* 🐛 fix lint ([526d34c](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/526d34c2724d9719b6fe882f063b93b49d1e0e7f))
+* 🐛 fix lint ([6192005](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/6192005882eda0cf79a31b3f1da5cb60f1decaa6))
+* 🐛 fix no data ui ([719a3b7](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/719a3b775df1735ae96f818a698c4f0c3a6ba11d))
+* 🐛 update screenshot ([ec9afb9](https://github.com/yeukfei02/hongkong-bus-arrival-app/commit/ec9afb9af667f07ce16dc946ba17a6a8ab632a41))
+
 ### [0.1.3](https://github.com/yeukfei02/hongkong-bus-arrival-app/compare/v0.1.2...v0.1.3) (2023-01-31)
 
 
