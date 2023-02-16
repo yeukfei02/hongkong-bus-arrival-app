@@ -138,20 +138,30 @@ function BusArrivalTime() {
     if (!loading) {
       if (!_.isEmpty(busArrivalTime)) {
         busArrivalTimeView = busArrivalTime.map((item, i) => {
-          return (
-            <View key={i}>
-              <Card style={styles.cardContainer}>
-                <Card.Title
-                  title={`${t("next")} ${item.eta_seq || i + 1} ${t("bus")}`}
-                />
-                <Card.Content>
-                  <Title>
-                    {t("remainingTime")} {getMinutesDiffStr(item.eta)}
-                  </Title>
+          if (item.eta_seq && item.eta) {
+            return (
+              <View key={i}>
+                <Card style={styles.cardContainer}>
+                  <Card.Title
+                    title={`${t("next")} ${item.eta_seq || i + 1} ${t("bus")}`}
+                  />
+                  <Card.Content>
+                    <Title>
+                      {t("remainingTime")} {getMinutesDiffStr(item.eta)}
+                    </Title>
+                  </Card.Content>
+                </Card>
+              </View>
+            );
+          } else {
+            return (
+              <Card key={i} style={styles.cardContainer}>
+                <Card.Content style={{ alignSelf: "center" }}>
+                  <Title style={{ color: "red" }}>{t("noData")}</Title>
                 </Card.Content>
               </Card>
-            </View>
-          );
+            );
+          }
         });
       } else {
         busArrivalTimeView = (
