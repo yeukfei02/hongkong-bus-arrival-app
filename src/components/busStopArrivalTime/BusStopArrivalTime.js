@@ -77,10 +77,10 @@ function BusStopArrivalTime() {
         }
       }
     } else if (company === "nlb") {
-      const response = await axios.get(`${rootUrl}/nlb/bus-arrival-time`, {
+      const response = await axios.get(`${rootUrl}/nlb/bus-stop-arrival-time`, {
         params: {
-          busStopId: busStopId,
-          routeId: "",
+          stopId: busStopId,
+          language: getLanguageText(),
         },
       });
       if (response && response.status === 200) {
@@ -88,7 +88,7 @@ function BusStopArrivalTime() {
         console.log("responseData = ", responseData);
 
         if (responseData) {
-          result = responseData.busArrivalTimeNlb;
+          result = responseData.busStopArrivalTimeNlb;
         }
       }
     }

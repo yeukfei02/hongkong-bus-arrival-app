@@ -294,7 +294,6 @@ function NearbyBusStop() {
                     labelStyle={{ fontSize: 15 }}
                     uppercase={false}
                     onPress={() => handleEnterButtonClick(item.stopId, "nlb")}
-                    disabled
                   >
                     Enter
                   </Button>
