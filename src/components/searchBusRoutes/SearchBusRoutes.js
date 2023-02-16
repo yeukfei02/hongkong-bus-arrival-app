@@ -86,8 +86,8 @@ function SearchBusRoutes() {
       console.log("responseData = ", responseData);
 
       if (responseData) {
-        const uniqBusRouteList = _.uniqBy(responseData.busRouteList, "routeNo");
-        setNlbRoutes(uniqBusRouteList);
+        // const uniqBusRouteList = _.uniqBy(responseData.busRouteList, "routeNo");
+        setNlbRoutes(responseData.busRouteList);
       }
     }
   };
@@ -124,7 +124,7 @@ function SearchBusRoutes() {
     setSearchText(text);
   };
 
-  const handleListItemClick = (companyId, routeStr) => {
+  const handleListItemClick = (companyId, routeStr, busRouteId) => {
     let direction = "";
     if (outboundChecked) {
       direction = "outbound";
@@ -133,11 +133,20 @@ function SearchBusRoutes() {
       direction = "inbound";
     }
 
-    navigation.navigate(t("busRoute"), {
-      companyId: companyId,
-      routeStr: routeStr,
-      direction: direction,
-    });
+    if (companyId !== "NLB") {
+      navigation.navigate(t("busRoute"), {
+        companyId: companyId,
+        routeStr: routeStr,
+        direction: direction,
+      });
+    } else {
+      navigation.navigate(t("busRouteStop"), {
+        companyId: companyId,
+        routeStr: routeStr,
+        direction: direction,
+        busRouteId: busRouteId,
+      });
+    }
   };
 
   const renderNwfbAndCtbRoutes = (nwfbAndCtbRoutes) => {
@@ -233,7 +242,9 @@ function SearchBusRoutes() {
           <List.Item
             key={i}
             title={item.routeNo}
-            onPress={() => handleListItemClick("NLB", item.routeNo)}
+            onPress={() =>
+              handleListItemClick("NLB", item.routeNo, item.routeId)
+            }
             left={(props) => <List.Icon {...props} icon="bus" />}
           />
         );

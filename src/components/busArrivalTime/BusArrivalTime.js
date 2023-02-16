@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 
 function BusArrivalTime() {
   const route = useRoute();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [loading, setLoading] = useState(true);
   const [busArrivalTime, setBusArrivalTime] = useState([]);
@@ -36,13 +36,19 @@ function BusArrivalTime() {
       const companyId = route.params.companyId;
       const routeStr = route.params.routeStr;
       const busStopId = route.params.busStopId;
+      const busRouteId = route.params.busRouteId;
       if (companyId && routeStr && busStopId) {
-        getBusArrivalTime(companyId, routeStr, busStopId);
+        getBusArrivalTime(companyId, routeStr, busStopId, busRouteId);
       }
     }
   }, [route.params]);
 
-  const getBusArrivalTime = async (companyId, routeStr, busStopId) => {
+  const getBusArrivalTime = async (
+    companyId,
+    routeStr,
+    busStopId,
+    busRouteId
+  ) => {
     if (companyId === "NWFB" || companyId === "CTB") {
       const response = await axios.get(`${rootUrl}/bus-arrival-time`, {
         params: {
@@ -76,7 +82,46 @@ function BusArrivalTime() {
           setBusArrivalTime(responseData.busArrivalTimeKmb);
         }
       }
+    } else if (companyId === "NLB") {
+      const response = await axios.get(`${rootUrl}/nlb/bus-arrival-time`, {
+        params: {
+          busRouteId: busRouteId,
+          busStopId: busStopId,
+          language: getLanguageText(),
+        },
+      });
+      if (response && response.status === 200) {
+        const responseData = response.data;
+        console.log("responseData = ", responseData);
+
+        if (responseData) {
+          setLoading(false);
+          setBusArrivalTime(responseData.busArrivalTimeNlb);
+        }
+      }
     }
+  };
+
+  const getLanguageText = () => {
+    let languageText = "zh-hant";
+
+    if (i18n.language) {
+      switch (i18n.language) {
+        case "eng":
+          languageText = "en";
+          break;
+        case "zh_hk":
+          languageText = "zh";
+          break;
+        case "zh_cn":
+          languageText = "cn";
+          break;
+        default:
+          break;
+      }
+    }
+
+    return languageText;
   };
 
   const renderBusArrivalTime = () => {
@@ -93,20 +138,30 @@ function BusArrivalTime() {
     if (!loading) {
       if (!_.isEmpty(busArrivalTime)) {
         busArrivalTimeView = busArrivalTime.map((item, i) => {
-          return (
-            <View key={i}>
-              <Card style={styles.cardContainer}>
-                <Card.Title
-                  title={`${t("next")} ${item.eta_seq} ${t("bus")}`}
-                />
-                <Card.Content>
-                  <Title>
-                    {t("remainingTime")} {getMinutesDiffStr(item.eta)}
-                  </Title>
+          if (item.eta_seq && item.eta) {
+            return (
+              <View key={i}>
+                <Card style={styles.cardContainer}>
+                  <Card.Title
+                    title={`${t("next")} ${item.eta_seq || i + 1} ${t("bus")}`}
+                  />
+                  <Card.Content>
+                    <Title>
+                      {t("remainingTime")} {getMinutesDiffStr(item.eta)}
+                    </Title>
+                  </Card.Content>
+                </Card>
+              </View>
+            );
+          } else {
+            return (
+              <Card key={i} style={styles.cardContainer}>
+                <Card.Content style={{ alignSelf: "center" }}>
+                  <Title style={{ color: "red" }}>{t("noData")}</Title>
                 </Card.Content>
               </Card>
-            </View>
-          );
+            );
+          }
         });
       } else {
         busArrivalTimeView = (

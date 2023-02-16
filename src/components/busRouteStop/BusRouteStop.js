@@ -43,13 +43,19 @@ function BusRouteStop() {
       const companyId = route.params.companyId;
       const routeStr = route.params.routeStr;
       const direction = route.params.direction;
+      const busRouteId = route.params.busRouteId;
       if (companyId && routeStr && direction) {
-        getBusRouteStop(companyId, routeStr, direction);
+        getBusRouteStop(companyId, routeStr, direction, busRouteId);
       }
     }
   }, [route.params]);
 
-  const getBusRouteStop = async (companyId, routeStr, direction) => {
+  const getBusRouteStop = async (
+    companyId,
+    routeStr,
+    direction,
+    busRouteId
+  ) => {
     if (companyId === "NWFB" || companyId === "CTB") {
       const response = await axios.get(`${rootUrl}/bus-route-stop`, {
         params: {
@@ -85,6 +91,22 @@ function BusRouteStop() {
           setBusRouteStop(responseData.busRouteStopKmb);
         }
       }
+    } else if (companyId === "NLB") {
+      const response = await axios.get(`${rootUrl}/nlb/bus-route-stop`, {
+        params: {
+          busRouteId: busRouteId,
+        },
+      });
+
+      if (response && response.status === 200) {
+        const responseData = response.data;
+        console.log("responseData = ", responseData);
+
+        if (responseData) {
+          setLoading(false);
+          setBusRouteStop(responseData.busRouteStopNlb);
+        }
+      }
     }
   };
 
@@ -110,6 +132,28 @@ function BusRouteStop() {
     return nameText;
   };
 
+  const getNlbBusStopNameText = (item) => {
+    let nameText = "";
+
+    if (i18n.language) {
+      switch (i18n.language) {
+        case "eng":
+          nameText = item.stopName_e;
+          break;
+        case "zh_hk":
+          nameText = item.stopName_c;
+          break;
+        case "zh_cn":
+          nameText = item.stopName_s;
+          break;
+        default:
+          break;
+      }
+    }
+
+    return nameText;
+  };
+
   const renderBusRouteStop = () => {
     let busRouteStopView = (
       <View>
@@ -123,37 +167,81 @@ function BusRouteStop() {
 
     if (!loading) {
       if (!_.isEmpty(busRouteStop)) {
-        busRouteStopView = busRouteStop.map((item, i) => {
-          return (
-            <View key={i}>
-              <Card style={styles.cardContainer}>
-                <Card.Content>
-                  <Title>{getNameText(item.stop)}</Title>
-                  <Paragraph
-                    style={styles.openInMap}
-                    onPress={() =>
-                      handleOpenInMap(item.stop.lat, item.stop.long)
-                    }
-                  >
-                    Open in map
-                  </Paragraph>
-                </Card.Content>
-                <Card.Actions>
-                  <Button
-                    mode="outlined"
-                    style={{ padding: 5 }}
-                    labelStyle={{ fontSize: 15 }}
-                    uppercase={false}
-                    onPress={() => handleEnterButtonClick(item.stop.stop)}
-                  >
-                    Enter
-                  </Button>
-                </Card.Actions>
-              </Card>
-              {renderArrowDownIcon(i)}
-            </View>
-          );
-        });
+        const companyId = route.params.companyId;
+        if (
+          companyId === "NWFB" ||
+          companyId === "CTB" ||
+          companyId === "KMB"
+        ) {
+          busRouteStopView = busRouteStop.map((item, i) => {
+            return (
+              <View key={i}>
+                <Card style={styles.cardContainer}>
+                  <Card.Content>
+                    <Title>{getNameText(item.stop)}</Title>
+                    <Paragraph
+                      style={styles.openInMap}
+                      onPress={() =>
+                        handleOpenInMap(item.stop.lat, item.stop.long)
+                      }
+                    >
+                      Open in map
+                    </Paragraph>
+                  </Card.Content>
+                  <Card.Actions>
+                    <Button
+                      mode="outlined"
+                      style={{ padding: 5 }}
+                      labelStyle={{ fontSize: 15 }}
+                      uppercase={false}
+                      onPress={() => handleEnterButtonClick(item.stop.stop)}
+                    >
+                      Enter
+                    </Button>
+                  </Card.Actions>
+                </Card>
+                {renderArrowDownIcon(i)}
+              </View>
+            );
+          });
+        } else if (companyId === "NLB") {
+          busRouteStopView = busRouteStop.map((item, i) => {
+            return (
+              <View key={i}>
+                <Card style={styles.cardContainer}>
+                  <Card.Content>
+                    <Title>{getNlbBusStopNameText(item)}</Title>
+                    <Paragraph
+                      style={styles.openInMap}
+                      onPress={() =>
+                        handleOpenInMap(item.latitude, item.longitude)
+                      }
+                    >
+                      Open in map
+                    </Paragraph>
+                  </Card.Content>
+                  <Card.Actions>
+                    <Button
+                      mode="outlined"
+                      style={{ padding: 5 }}
+                      labelStyle={{ fontSize: 15 }}
+                      uppercase={false}
+                      onPress={() =>
+                        handleEnterButtonClick(
+                          item.stopId,
+                          route.params.busRouteId
+                        )
+                      }
+                    >
+                      Enter
+                    </Button>
+                  </Card.Actions>
+                </Card>
+                {renderArrowDownIcon(i)}
+              </View>
+            );
+          });
+        }
       } else {
         busRouteStopView = (
           <View>
@@ -170,11 +258,12 @@ function BusRouteStop() {
     return busRouteStopView;
   };
 
-  const handleEnterButtonClick = (busStopId) => {
+  const handleEnterButtonClick = (busStopId, busRouteId) => {
     navigation.navigate(t("busArrivalTime"), {
       companyId: route.params.companyId,
       routeStr: route.params.routeStr,
       busStopId: busStopId,
+      busRouteId: busRouteId,
     });
   };
 
