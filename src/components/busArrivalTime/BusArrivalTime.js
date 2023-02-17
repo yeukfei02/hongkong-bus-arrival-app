@@ -138,7 +138,10 @@ function BusArrivalTime() {
     if (!loading) {
       if (!_.isEmpty(busArrivalTime)) {
         busArrivalTimeView = busArrivalTime.map((item, i) => {
-          if (item.eta_seq && item.eta) {
+          if (
+            (item.eta_seq || i >= 0) &&
+            (item.eta || item.estimatedArrivalTime)
+          ) {
             return (
               <View key={i}>
                 <Card style={styles.cardContainer}>
@@ -147,7 +150,8 @@ function BusArrivalTime() {
                   />
                   <Card.Content>
                     <Title>
-                      {t("remainingTime")} {getMinutesDiffStr(item.eta)}
+                      {t("remainingTime")}{" "}
+                      {getMinutesDiffStr(item.eta || item.estimatedArrivalTime)}
                     </Title>
                   </Card.Content>
                 </Card>
