@@ -137,12 +137,14 @@ function BusStopArrivalTime() {
         busStopArrivalTimeView = Object.entries(busStopArrivalTime).map(
           ([key, value], i) => {
             const valueListView = value.map((item, i) => {
-              if (item.eta_seq && item.eta) {
+              if ((item.eta_seq || i >= 0) && item.eta) {
                 return (
                   <View key={i}>
                     <Card style={styles.cardContainer}>
                       <Card.Title
-                        title={`${t("next")} ${item.eta_seq} ${t("bus")}`}
+                        title={`${t("next")} ${item.eta_seq || i + 1} ${t(
+                          "bus"
+                        )}`}
                       />
                       <Card.Content>
                         <Title>
