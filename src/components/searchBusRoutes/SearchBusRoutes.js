@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
+import { StyleSheet, ScrollView, View } from "react-native";
 import { List, TextInput } from "react-native-paper";
+import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { getRootUrl } from "../../helper/helper";
-import CustomRadioButton from "../customRadioButton/CustomRadioButton";
 import _ from "lodash";
 
 const rootUrl = getRootUrl();
@@ -18,12 +18,11 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     marginHorizontal: 25,
-    marginVertical: 5,
+    marginVertical: 10,
   },
-  radioButtonContainer: {
-    flexDirection: "row",
+  dropdownContainer: {
     marginHorizontal: 25,
-    marginVertical: 5,
+    marginVertical: 15,
   },
   accordionContainer: {
     marginHorizontal: 25,
@@ -33,14 +32,37 @@ const styles = StyleSheet.create({
 
 function SearchBusRoutes() {
   const navigation = useNavigation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const [nwfbOrCtbChecked, setNwfbOrCtbChecked] = useState(true);
-  const [kmbChecked, setKmbChecked] = useState(false);
-  const [nlbChecked, setNlbChecked] = useState(false);
+  const [busCompanyOpen, setBusCompanyOpen] = useState(false);
+  const [busCompanyValue, setBusCompanyValue] = useState(t("nwfbAndCtb"));
+  const [busCompanyItems, setBusCompanyItems] = useState([
+    {
+      label: t("nwfbAndCtb"),
+      value: t("nwfbAndCtb"),
+    },
+    {
+      label: t("kmb"),
+      value: t("kmb"),
+    },
+    {
+      label: t("nlb"),
+      value: t("nlb"),
+    },
+  ]);
 
-  const [outboundChecked, setOutboundChecked] = useState(true);
-  const [inboundChecked, setInboundChecked] = useState(false);
+  const [directionOpen, setDirectionOpen] = useState(false);
+  const [directionValue, setDirectionValue] = useState(t("outbound"));
+  const [directionItems, setDirectionItems] = useState([
+    {
+      label: t("outbound"),
+      value: t("outbound"),
+    },
+    {
+      label: t("inbound"),
+      value: t("inbound"),
+    },
+  ]);
 
   const [nwfbAndCtbRoutes, setNwfbAndCtbRoutes] = useState([]);
   const [kmbRoutes, setKmbRoutes] = useState([]);
@@ -92,61 +114,85 @@ function SearchBusRoutes() {
     }
   };
 
-  const handleNwfbOrCtbRadioButtonClick = () => {
-    setNwfbOrCtbChecked(true);
-    setKmbChecked(false);
-    setNlbChecked(false);
-  };
-
-  const handleKmbRadioButtonClick = () => {
-    setNwfbOrCtbChecked(false);
-    setKmbChecked(true);
-    setNlbChecked(false);
-  };
-
-  const handleNlbRadioButtonClick = () => {
-    setNwfbOrCtbChecked(false);
-    setKmbChecked(false);
-    setNlbChecked(true);
-  };
-
-  const handleOutboundRadioButtonClick = () => {
-    setOutboundChecked(true);
-    setInboundChecked(false);
-  };
-
-  const handleInboundRadioButtonClick = () => {
-    setOutboundChecked(false);
-    setInboundChecked(true);
-  };
-
   const handleSearchTextChange = (text) => {
     setSearchText(text);
   };
 
-  const handleListItemClick = (companyId, routeStr, busRouteId) => {
+  const handleListItemClick = async (companyId, routeStr, busRouteId) => {
     let direction = "";
-    if (outboundChecked) {
+    if (directionValue === t("outbound")) {
       direction = "outbound";
-    }
-    if (inboundChecked) {
+    } else if (directionValue === t("inbound")) {
       direction = "inbound";
     }
 
-    if (companyId !== "NLB") {
-      navigation.navigate(t("busRoute"), {
-        companyId: companyId,
-        routeStr: routeStr,
-        direction: direction,
-      });
-    } else {
-      navigation.navigate(t("busRouteStop"), {
-        companyId: companyId,
-        routeStr: routeStr,
-        direction: direction,
-        busRouteId: busRouteId,
-      });
+    let from = "";
+    let to = "";
+    if (companyId === "NLB") {
+      const data = await getBusRouteStop(busRouteId);
+      if (data) {
+        from = data.from;
+        to = data.to;
+      }
     }
+
+    navigation.navigate(t("busRoute"), {
+      companyId: companyId,
+      routeStr: routeStr,
+      direction: direction,
+      busRouteId: busRouteId,
+      from: from,
+      to: to,
+    });
+  };
+
+  const getBusRouteStop = async (busRouteId) => {
+    let data = {};
+
+    const response = await axios.get(`${rootUrl}/nlb/bus-route-stop`, {
+      params: {
+        busRouteId: busRouteId,
+      },
+    });
+
+    if (response && response.status === 200) {
+      const responseData = response.data;
+      console.log("responseData = ", responseData);
+
+      if (responseData) {
+        const busRouteStopsNlb = responseData.busRouteStopNlb;
+        const from = getStopNameText(busRouteStopsNlb[0]);
+        const to = getStopNameText(
+          busRouteStopsNlb[busRouteStopsNlb.length - 1]
+        );
+        data["from"] = from;
+        data["to"] = to;
+      }
+    }
+
+    return data;
+  };
+
+  const getStopNameText = (stop) => {
+    let stopNameText = "";
+
+    if (i18n.language) {
+      switch (i18n.language) {
+        case "eng":
+          stopNameText = stop.stopName_e;
+          break;
+        case "zh_hk":
+          stopNameText = stop.stopName_c;
+          break;
+        case "zh_cn":
+          stopNameText = stop.stopName_s;
+          break;
+        default:
+          break;
+      }
+    }
+
+    return stopNameText;
   };
 
   const renderNwfbAndCtbRoutes = (nwfbAndCtbRoutes) => {
@@ -265,68 +311,92 @@ function SearchBusRoutes() {
     return nlbRoutesView;
   };
 
-  const renderBusCompanyRadioButtonView = () => {
-    const busCompanyRadioButtonView = (
-      <View style={styles.radioButtonContainer}>
-        <TouchableOpacity onPress={() => handleNwfbOrCtbRadioButtonClick()}>
-          <CustomRadioButton
-            text={t("nwfbAndCtb")}
-            checked={nwfbOrCtbChecked}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ marginLeft: 10 }}
-          onPress={() => handleKmbRadioButtonClick()}
-        >
-          <CustomRadioButton text={t("kmb")} checked={kmbChecked} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ marginLeft: 10 }}
-          onPress={() => handleNlbRadioButtonClick()}
-        >
-          <CustomRadioButton text={t("nlb")} checked={nlbChecked} />
-        </TouchableOpacity>
-      </View>
-    );
-    return busCompanyRadioButtonView;
+  const onChangeValue = (value) => {
+    if (value) {
+      switch (value) {
+        case t("nwfbAndCtb"):
+          setBusCompanyValue(t("nwfbAndCtb"));
+          break;
+        case t("kmb"):
+          setBusCompanyValue(t("kmb"));
+          break;
+        case t("nlb"):
+          setBusCompanyValue(t("nlb"));
+          break;
+        default:
+      }
+    }
   };
 
-  const renderOutboundOrInboundRadioButtonView = () => {
-    const outboundOrInboundRadioButtonView = (
-      <View style={styles.radioButtonContainer}>
-        <TouchableOpacity onPress={() => handleOutboundRadioButtonClick()}>
-          <CustomRadioButton text={t("outbound")} checked={outboundChecked} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ marginLeft: 10 }}
-          onPress={() => handleInboundRadioButtonClick()}
-        >
-          <CustomRadioButton text={t("inbound")} checked={inboundChecked} />
-        </TouchableOpacity>
+  const onChangeValue2 = (value) => {
+    if (value) {
+      switch (value) {
+        case t("outbound"):
+          setDirectionValue(t("outbound"));
+          break;
+        case t("inbound"):
+          setDirectionValue(t("inbound"));
+          break;
+        default:
+      }
+    }
+  };
+
+  const renderBusCompanySelectDropdown = () => {
+    const selectDropdown = (
+      <View style={styles.dropdownContainer}>
+        <DropDownPicker
+          open={busCompanyOpen}
+          value={busCompanyValue}
+          items={busCompanyItems}
+          setOpen={setBusCompanyOpen}
+          setValue={setBusCompanyValue}
+          setItems={setBusCompanyItems}
+          onChangeValue={onChangeValue}
+        />
       </View>
     );
-    return outboundOrInboundRadioButtonView;
+
+    return selectDropdown;
+  };
+
+  const renderDirectionSelectDropdown = () => {
+    const selectDropdown = (
+      <View style={styles.dropdownContainer}>
+        <DropDownPicker
+          open={directionOpen}
+          value={directionValue}
+          items={directionItems}
+          setOpen={setDirectionOpen}
+          setValue={setDirectionValue}
+          setItems={setDirectionItems}
+          onChangeValue={onChangeValue2}
+        />
+      </View>
+    );
+
+    return selectDropdown;
   };
 
   const renderRoutesView = () => {
     let finalRoutesView = null;
 
     let routesView = null;
-    if (nwfbOrCtbChecked && nwfbAndCtbRoutes) {
+    if (busCompanyValue === t("nwfbAndCtb") && nwfbAndCtbRoutes) {
       routesView = (
         <View style={styles.accordionContainer}>
           {renderNwfbAndCtbRoutes(nwfbAndCtbRoutes)}
         </View>
       );
     }
-    if (kmbChecked && kmbRoutes) {
+    if (busCompanyValue === t("kmb") && kmbRoutes) {
       routesView = (
         <View style={styles.accordionContainer}>
           {renderKmbRoutes(kmbRoutes)}
         </View>
       );
     }
-    if (nlbChecked && nlbRoutes) {
+    if (busCompanyValue === t("nlb") && nlbRoutes) {
       routesView = (
         <View style={styles.accordionContainer}>
           {renderNlbRoutes(nlbRoutes)}
@@ -356,9 +426,9 @@ function SearchBusRoutes() {
       style={styles.container}
       contentContainerStyle={{ paddingBottom: 30 }}
     >
-      {renderBusCompanyRadioButtonView()}
-      {renderOutboundOrInboundRadioButtonView()}
-      {renderRoutesView()}
+      <View style={{ zIndex: 1000 }}>{renderBusCompanySelectDropdown()}</View>
+      <View style={{ zIndex: 900 }}>{renderDirectionSelectDropdown()}</View>
+      <View style={{ zIndex: 800 }}>{renderRoutesView()}</View>
     </ScrollView>
   );
 }

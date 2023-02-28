@@ -77,6 +77,8 @@ function BusRoute() {
           setBusRoute(responseData.busRouteKmb);
         }
       }
+    } else if (companyId === "NLB") {
+      setLoading(false);
     }
   };
 
@@ -165,15 +167,52 @@ function BusRoute() {
     );
 
     if (!loading) {
-      if (!_.isEmpty(busRoute)) {
+      const companyId = route.params.companyId;
+      if (companyId !== "NLB") {
+        if (!_.isEmpty(busRoute)) {
+          busRouteView = (
+            <Card style={styles.cardContainer}>
+              <Card.Title
+                title={busRoute.route}
+                subtitle={getCompanyText(busRoute.co)}
+              />
+              <Card.Content>
+                <Paragraph>{getDirectionText(busRoute)}</Paragraph>
+              </Card.Content>
+              <Card.Actions>
+                <Button
+                  mode="outlined"
+                  style={{ padding: 5 }}
+                  labelStyle={{ fontSize: 15 }}
+                  uppercase={false}
+                  onPress={() =>
+                    handleEnterButtonClick(
+                      route.params.companyId,
+                      route.params.routeStr,
+                      route.params.direction
+                    )
+                  }
+                >
+                  Enter
+                </Button>
+              </Card.Actions>
+            </Card>
+          );
+        } else {
+          busRouteView = (
+            <Card style={styles.cardContainer}>
+              <Card.Content style={{ alignSelf: "center" }}>
+                <Title style={{ color: "red" }}>{t("noData")}</Title>
+              </Card.Content>
+            </Card>
+          );
+        }
+      } else {
         busRouteView = (
           <Card style={styles.cardContainer}>
-            <Card.Title
-              title={busRoute.route}
-              subtitle={getCompanyText(busRoute.co)}
-            />
+            <Card.Title title={route.params.routeStr} subtitle={t("nlb")} />
             <Card.Content>
-              <Paragraph>{getDirectionText(busRoute)}</Paragraph>
+              <Paragraph>{`From ${route.params.from} to ${route.params.to}`}</Paragraph>
             </Card.Content>
             <Card.Actions>
               <Button
@@ -194,14 +233,6 @@ function BusRoute() {
             </Card.Actions>
           </Card>
         );
-      } else {
-        busRouteView = (
-          <Card style={styles.cardContainer}>
-            <Card.Content style={{ alignSelf: "center" }}>
-              <Title style={{ color: "red" }}>{t("noData")}</Title>
-            </Card.Content>
-          </Card>
-        );
       }
     }
 
@@ -209,10 +240,13 @@ function BusRoute() {
   };
 
   const handleEnterButtonClick = (companyId, routeStr, direction) => {
+    const busRouteId = route.params.busRouteId;
+
     navigation.navigate(t("busRouteStop"), {
       companyId: companyId,
       routeStr: routeStr,
       direction: direction,
+      busRouteId: busRouteId,
     });
   };
 
