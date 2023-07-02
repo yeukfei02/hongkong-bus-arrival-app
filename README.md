@@ -1,6 +1,6 @@
 <p align="center">
   <img width="200px" src="https://github.com/yeukfei02/hongkong-bus-arrival-app/blob/main/readme-icon.png?raw=true"><br/>
-  <h2 align="center">hongkong-bus-arrival-app</h2>
+  <h2 align="center">hongkong-bus-arrival-app (香港巴士到站時間App)</h2>
 </p>
 
 <p align="center">
